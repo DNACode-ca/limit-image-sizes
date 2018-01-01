@@ -156,7 +156,7 @@ if ( ! class_exists( "Limit_Images" ) ) {
 		 * Some quick and simple styling
 		 */
 		public function limit_page_styling() {
-			if ( isset( $_GET['page'] ) && $_GET['page'] == $this->page_slug ) {
+			if ( isset( $_GET['page'] ) && $_GET['page'] == $this->page_file ) {
 				echo '<style>';
 				echo '.checkmark { color: #5BC859; }';
 				echo '.crossmark { color: #C84F45; }';
