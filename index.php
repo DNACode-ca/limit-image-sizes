@@ -17,6 +17,7 @@ if ( ! class_exists( "Limit_Images" ) ) {
 	class Limit_Images {
 
 		public $page_slug = '';
+		public $page_file = 'limit-options';
 		public $limited_images_option = 'limit_disabled_images';
 
 		public function __construct() {
@@ -27,6 +28,8 @@ if ( ! class_exists( "Limit_Images" ) ) {
 			add_action( 'init', array( $this, 'limit_options_saved' ) );
 
 			add_action( 'admin_head', array( $this, 'limit_page_styling' ) );
+
+			add_filter( "plugin_action_links_" . plugin_basename( __FILE__ ), array( $this, 'add_settings_link' ) );
 		}
 
 		/**
@@ -70,9 +73,9 @@ if ( ! class_exists( "Limit_Images" ) ) {
 			                       ->set_default_value( 'true' )
 			;
 
-			$this->page_slug = Container::make( 'theme_options', esc_html__( 'Limit Images', 'limit-images' ) )
+			$this->page_slug = Container::make( 'theme_options', esc_html__( 'Limit Image Sizes', 'limit-images' ) )
 			                            ->set_page_parent( 'upload.php' )
-			                            ->set_page_file( 'limit-options' )
+			                            ->set_page_file( $this->page_file )
 			                            ->add_fields( $image_fields )
 			;
 		}
@@ -142,14 +145,23 @@ if ( ! class_exists( "Limit_Images" ) ) {
 			return $_wp_additional_image_sizes;
 		}
 
+		public function add_settings_link( $links ) {
+			$settings_link = '<a href="' . admin_url( 'upload.php?page=' . $this->page_file ) . '">' . __( 'Settings' ) . '</a>';
+			array_push( $links, $settings_link );
+
+			return $links;
+		}
+
 		/**
 		 * Some quick and simple styling
 		 */
 		public function limit_page_styling() {
-			echo '<style>';
-			echo '.checkmark { color: #5BC859; }';
-			echo '.crossmark { color: #C84F45; }';
-			echo '</style>';
+			if ( isset( $_GET['page'] ) && $_GET['page'] == $this->page_slug ) {
+				echo '<style>';
+				echo '.checkmark { color: #5BC859; }';
+				echo '.crossmark { color: #C84F45; }';
+				echo '</style>';
+			}
 		}
 
 	}
