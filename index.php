@@ -86,9 +86,11 @@ if ( ! class_exists( "Limit_Images" ) ) {
 			// alter the image sizes
 			$disabled_images = get_option( $this->limited_images_option );
 
-			foreach ( $disabled_images as $disabled_image ) {
-				if ( isset( $_wp_additional_image_sizes[ $disabled_image ] ) ) {
-					unset( $_wp_additional_image_sizes[ $disabled_image ] );
+			if ( ! empty( $disabled_images ) ) {
+				foreach ( $disabled_images as $disabled_image ) {
+					if ( isset( $_wp_additional_image_sizes[ $disabled_image ] ) ) {
+						unset( $_wp_additional_image_sizes[ $disabled_image ] );
+					}
 				}
 			}
 		}
@@ -140,7 +142,10 @@ if ( ! class_exists( "Limit_Images" ) ) {
 			return $_wp_additional_image_sizes;
 		}
 
-		public function limit_page_styling(){
+		/**
+		 * Some quick and simple styling
+		 */
+		public function limit_page_styling() {
 			echo '<style>';
 			echo '.checkmark { color: #5BC859; }';
 			echo '.crossmark { color: #C84F45; }';
